@@ -7,7 +7,7 @@ spring:
         - id: exchange-service
           uri: http://exchange.kwt-dev.svc.cluster.local
           predicates:
-            - Path=/salary/**
+            - Path=/exchange/**
           filters:
             - name: RequestLogging
             - name: ResponseLogging
