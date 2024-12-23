@@ -1,0 +1,29 @@
+spring:
+  config:
+    import: application-common.yml
+  cloud:
+    gateway:
+      routes:
+        - id: exchange-service
+          uri: http://exchange.kwt-prod.svc.cluster.local
+          predicates:
+            - Path=/salary/**
+          filters:
+            - name: RequestLogging
+            - name: ResponseLogging
+
+        - id: salary-service
+          uri: http://salary.kwt-prod.svc.cluster.local
+          predicates:
+            - Path=/salary/**
+          filters:
+            - name: RequestLogging
+            - name: ResponseLogging
+
+logging:
+  level:
+    root: INFO
+    kr.co.kwt.gateway: INFO
+    org.springframework.cloud.gateway: INFO
+    org.springframework.web.reactive: INFO
+    reactor.netty.http.client: INFO
