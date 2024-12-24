@@ -7,15 +7,16 @@ spring:
         - SetRequestHeader=X-Forwarded-Proto, https
       routes:
         - id: exchange-service
-          uri: http://exchange.kwt-dev.svc.cluster.local
+          uri: https://exchange-dev.kwt.co.kr
           predicates:
             - Path=/exchange/**
           filters:
             - RewritePath=/exchange/(?<segment>.*), /${segment}
             - name: RequestLogging
             - name: ResponseLogging
+
         - id: salary-service
-          uri: http://salary.kwt-dev.svc.cluster.local
+          uri: https://salary-dev.kwt.co.kr
           predicates:
             - Path=/salary/**
           filters:

@@ -17,15 +17,26 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
-cors:
-  allowed-origins:
-    - "https://*.kwt.co.kr"
-  allowed-methods:
-    - GET
-    - POST
-    - PUT
-    - DELETE
-    - OPTIONS
-  allowed-headers:
-    - "*"
-  max-age: 3600
+gateway:
+  security:
+    allowed-domains:
+      - localhost
+      - kwt.co.kr
+      - kwt-dev.co.kr
+    public-paths:
+      - /public/**
+      - /auth/login
+      - /auth/register
+  cors:
+    allowed-origins:
+      - https://*.kwt.co.kr
+      - https://*.kwt-dev.co.kr
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - "*"
+    max-age: 3600

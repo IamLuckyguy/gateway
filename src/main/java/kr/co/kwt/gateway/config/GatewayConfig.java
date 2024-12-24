@@ -1,26 +1,25 @@
 package kr.co.kwt.gateway.config;
 
+import kr.co.kwt.gateway.config.properties.CorsProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.reactive.config.EnableWebFlux;
-
-import java.util.Arrays;
 
 @Configuration
-@EnableWebFlux
+@EnableConfigurationProperties({CorsProperties.class})
 public class GatewayConfig {
-
     @Bean
-    public CorsWebFilter corsWebFilter() {
+    public CorsWebFilter corsFilter(CorsProperties corsProperties) {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(Arrays.asList("https://*.kwt.co.kr"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.setMaxAge(3600L);
+        corsProperties.getAllowedOrigins().forEach(config::addAllowedOriginPattern);
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        config.setAllowCredentials(true);
+        config.setMaxAge(corsProperties.getMaxAge());
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

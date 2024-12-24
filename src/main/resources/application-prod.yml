@@ -3,22 +3,31 @@ spring:
     import: application-common.yml
   cloud:
     gateway:
+      default-filters:
+        - SetRequestHeader=X-Forwarded-Proto, https
       routes:
         - id: exchange-service
           uri: http://exchange.kwt-prod.svc.cluster.local
           predicates:
             - Path=/exchange/**
           filters:
+            - RewritePath=/exchange/(?<segment>.*), /${segment}
             - name: RequestLogging
             - name: ResponseLogging
-
         - id: salary-service
           uri: http://salary.kwt-prod.svc.cluster.local
           predicates:
             - Path=/salary/**
           filters:
+            - RewritePath=/salary/(?<segment>.*), /${segment}
             - name: RequestLogging
             - name: ResponseLogging
+  data:
+    redis:
+      host: redis-master.kwt-prod.svc.cluster.local
+      port: 6379
+      password: fpeltmWkd!@#123
+      database: 0
 
 logging:
   level:
@@ -27,3 +36,9 @@ logging:
     org.springframework.cloud.gateway: INFO
     org.springframework.web.reactive: INFO
     reactor.netty.http.client: INFO
+
+gateway:
+  rate-limit:
+    capacity: 100 # 버킷의 최대 수용량
+    refill-tokens: 1 # 각 주기마다 채워지는 토큰 수
+    refill-period-ms: 1000 # 토큰이 채워지는 주기 (ms)
